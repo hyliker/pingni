@@ -1,0 +1,12 @@
+{% extends "base/base.xhtml" %}
+{% block content %}
+{% for s in show_list %}
+<div class="show">
+    <a href="{% url show s.pk %}" class="show-title">{{ s.title }}</a>
+    <p class="show-meta"><a href="{% url show_user s.user.pk %}">{{ s.user }}</a> 
+    分享于 {{ s.dtcreated }} <span class="read_count">浏览({{ s.read_count }})</span> <a href="{% url show s.pk %}#commentsWrapper">评论({{ s.comment_count }})</a> <a href="{% url show s.pk %}#likes">喜欢({{ s.like_count }})</a>
+    </p>
+</div>
+{% endfor %}
+
+{% endblock %}

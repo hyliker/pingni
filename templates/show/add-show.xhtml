@@ -1,0 +1,74 @@
+{% extends "base/base.xhtml" %}
+{% block content %}
+<form id="addForm" method="post" enctype="multipart/form-data">
+    <h5>+ 分享</h5>
+    {% csrf_token %}
+    <div class="formrow">
+        <label for="id_title" class="required">标题</label>{{ form.title.errors }}
+        <p><input type="text" class="longinput" id="id_title" name="title" /></p>
+    </div>
+    <div class="formrow">
+        <label for="id_image" class="required">上传照片(小于1M)</label>{{ form.image.errors }}
+        <p><input type="file" id="id_image" class="longinput" name="image" /></p>
+    </div>
+    <div class="formrow">
+        <label for="id_description">简短描述(0 / 256个字)</label>{{ form.description.errors }}
+        <p><textarea id="id_description" class="longinput" name="description"></textarea></p>
+    </div>
+    <div class="formrow">
+        <label for="id_tags">标签(多个标签间用<strong>英文逗号</strong>分开)</label>
+        <p><input type="text" id="id_tags" class="longinput" name="tags" /></p>
+    </div>
+    <div class="formrow">
+        <label for="id_quote">引用</label>
+        <p><input type="text" id="id_quote" name="quote" class="longinput" /></p>
+    </div>
+    <p>
+        <input type="submit" class="submit-button" value="提交，分享" />
+    </p>
+</form>
+<style type="text/css">
+#addForm {
+    padding: 10px;
+}
+#addForm label {
+    color: #888;
+}
+#addForm label.required {
+    color: #000;
+}
+.formrow {
+    padding: 5px 0;
+}
+#addForm h5 {
+    margin-bottom: 10px;
+}
+#addForm p {
+    padding: 5px 0;
+}
+.longinput {
+    width: 100%;
+    padding: 5px;
+    border: 2px solid #eee;
+}
+.longinput:focus {
+    border-color: #FF5C69;
+    border-color: #888;
+}
+.submit-button {
+    padding: 10px 20px;
+}
+.submit-button:hover {
+    padding: 10px 20px;
+}
+ul.errorlist {
+    color: #cc0066;
+    padding: 10px;
+    display: inline;
+}
+ul li {
+    display: inline;
+}
+
+</style>
+{% endblock %}

@@ -1,0 +1,205 @@
+{% extends "base/base.xhtml" %}
+{% load util_filter %}
+{% block banner %} {% endblock %}
+{% block title %} {{ show.title }} {{ block.super }} {% if show.tags %} {% for t in show.tags %} {{ t.name }} {% endfor %} {% endif %} {% endblock %}
+{% block extra-head %}
+<style type="text/css">
+img.avatar {
+    width: 36px;
+    height: 36px;
+    padding: 0px;
+    background-color: #fff;
+}
+ul.errorlist {
+    color: #FF5C69;
+}
+.comment-meta {
+    _margin-top: -10px;
+}
+
+</style>
+{% endblock %}
+{% block content %}
+{% with show as s %}
+<div class="show">
+    <div class="show-header">
+        {% if user in s.likes.all %}
+        <a href="{% url show_like s.pk %}?undo=1" class="likit I_likit">我喜欢({{ s.likes.count }})</a>
+        {% else %}
+        <a href="{% url show_like s.pk %}" class="likit">我喜欢({{ s.likes.count }})</a>
+        {% endif %}
+
+        {% if s.user.get_profile.avatar %}
+        <img src="{{ s.user.get_profile.avatar.thumbnail.url }}" class="avatar" style="margin-right:10px;"  />
+        {% else %}
+        <img src="/static/img/anonymous.jpg" class="avatar" style="margin-right:10px;" />
+        {% endif %}
+
+        <a href="{% url show s.pk %}" class="show-title">{{ s.title }}</a>
+        <p class="show-meta">
+        <a href="{% url show_user s.user.pk %}">{{ s.user }}</a> 
+            分享于 {{ s.dtcreated }} <span class="read_count">浏览({{ s.read_count }})</span> <a href="{% url show s.pk %}#commentsWrapper">评论({{ s.comment_count }})</a> <a href="#">喜欢({{ s.like_count }})</a>
+            {% if s.user == user %}
+            <a href="{% url edit_show s.pk %}">编辑</a>
+            {% endif %}
+        </p>
+    </div>
+
+    {% if s.showimage_set.all %}
+        {% for si in s.showimage_set.all %}
+        <div class="show-body">
+            <img src="{{ si.image_url }}" />
+            <p class="show-description">
+            {{ si.description }}
+            </p>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="show-body">
+            <img src="{{ s.image.url }}" />
+            <p class="show-description">
+            {{ s.description }}
+            </p>
+        </div>
+    {% endif %}
+
+    {% if s.quote %}
+    <p class="show-quote">引用 {% if s.quote_url %}<a href="{{ s.quote_url }}">{{ s.quote }}</a>{% else %} {{ s.quote }} {% endif %}</p>
+    {% endif %}
+
+    {% if s.tags %}
+    <p class="show-tags">标签 
+    {% for t in s.tags %}
+    <a href="{% url show_tag t.name %}">{{ t.name }}</a>
+    {% endfor %}
+    </p>
+    {% endif %}
+
+    {% if s.likes.all %}
+    <a name="likes"></a>
+    <p class="show-liker">喜欢
+        {% for l in s.likes.all %}
+        <a href="{% url show_user l.pk %}">{{ l }}</a>
+        {% endfor %}
+    </p>
+    {% endif %}
+</div>
+{% if comments %}
+<div id="commentsWrapper">
+    <h6>{{ comments|length }} 条评论</h6>
+    <ul class="comments">
+        {% for c in comments %}
+            {% if forloop.last %}
+        <a name="lastComment"></a>
+        <li class="comment" id="lastComment">
+            {% else %}
+        <li class="comment">
+            {% endif %}
+            {% if c.author.get_profile.avatar %}
+            <img src="{{ c.author.get_profile.avatar.thumbnail.url }}" class="avatar" />
+            {% else %}
+            <img src="/static/img/anonymous.jpg" class="avatar" />
+            {% endif %}
+            <p class="comment-meta">
+            {% if c.author %}<a href="#">{{ c.author }}</a>{% else %} 匿名人 {% endif %} 评论于 {{ c.dtcommented }} {% if c.author == user %} | <a href="{% url delete_comment c.pk %}">删除</a>{% endif %}
+            </p>
+            <p class="comment-content">{{ c.content|charwrap:80}}</p>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% endwith %}
+
+<div id="submit-comment">
+    <form method="post" action="{% url add_comment %}" id="id-comment-form">
+        {% csrf_token %}
+    <label>你的评论 (<span id="id_comment_content_count">0</span>/250 字符)</label>
+    <input type="hidden" name="content_type_id" value="{{ content_type.pk }}" />
+    <input type="hidden" name="object_id" value="{{ show.pk }}" />
+    <textarea name="content" id="id_comment_content" class="comment"></textarea>
+    <p>
+    <label>验证码：</label>
+    {{ form.captcha }}
+    {{ form.captcha.errors }}
+    <span id="captcha_errors"></span>
+    </p>
+    <p><input type="submit" value="提交评论" class="submit-button" /></p>
+    </form>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    $("a.likit").click(function (event) {
+        event.preventDefault();
+        var url = $(this).attr("href");
+        var $obj = $(this);
+        $.getJSON(url, function (res) {
+            if(res.success) {
+                if (res.undo) {
+                    $obj.removeClass("I_likit");
+                    $obj.attr("href", url.replace("undo=1", ""));
+                } else {
+                    $obj.addClass("I_likit");
+                    $obj.attr("href", url + "undo=1");
+                }
+                $obj.html("我喜欢(" + res.data.likit_count + ")");
+            } else {
+                alert("你还没有注册或者登陆，无法收藏");
+            }
+        });
+    });
+
+    $("#id_comment_content").bind("keypress change blur keydown keyup", function () {
+        var max_length = 250;
+        var char_count = $("#id_comment_content").val().length;
+        $("#id_comment_content_count").text(char_count);
+        if (char_count > 250) {
+            $("#id_comment_content_count").css("color", "red");
+            if (e.keyCode == "8" || e.keyCode == "46") {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            $("#id_comment_content_count").css("color", "");
+            return true;
+        }
+    });
+
+    $("#id-comment-form").submit(function () {
+        var max_length = 250;
+        var char_count = $("#id_comment_content").val().length;
+        $("#id_comment_content_count").text(char_count);
+        if (char_count > 250) {
+            alert("评论不能超过250个字符");
+            return false;
+        } else if (char_count == 0) {
+            alert("评论不能为空");
+            return false;
+        }
+
+        if ($("#id_captcha_1").val() == "") {
+            //alert("验证码还没有输入");
+            $("#id_captcha_1").after('<span class="error">验证码还没有输入。</span>');
+            return false;
+        }
+
+        $.post($(this).attr("action"), $(this).serialize(), function (res) {
+            if(res.success) {
+                location.href = location.pathname + "?#lastComment";
+                location.reload();
+            } else {
+                if(res.errors) {
+                    alert(res.errors);
+                } else {
+                    $("#captcha_errors").html('<span class="error">提交评论失败， 请检查验证码是否正确。</span>');
+                }
+            }
+        }, "json");
+        return false;
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends "base/base.xhtml" %}
+{% block content %}
+<div id="main-content" class="clearfix">
+    <h5 class="title-bar">查收注册信,完成帐号激活</h5>
+
+    <div id="tips">
+        <p class="finalStep"> 最后一步: 确认信已经发往你的邮箱 reg@ibijiao.com , 需要你点击邮件中的链接来完成注册。 </p> 
+        <h5>没收到确认信怎么办？</h5>
+        <ol class="default">
+            <li>看看Email地址有没有写错。</li>
+            <li>看看是否在邮箱垃圾箱里。</li>
+            <li>稍等几分钟再看看。</li>
+            <li>若10分钟内没收到确认信，让我们重发一封。</li>
+        </ol>
+    </div>
+
+</div><!--/main-content-->
+
+<style type="text/css">
+p.finalStep {
+    font-size: 1.2em;
+    margin: 20px 0;
+}
+/*---- errorlist ----*/
+#tips ol.default {
+    list-style-type: decimal;
+    margin-left: 20px;
+}
+ul.errorlist {
+    color: #cc0066;
+    padding: 10px 0;
+    float: left;
+}
+ul li {
+    float: left;
+}
+#tips {
+    font-size: 12px;
+    color: #333;
+    padding: 10px;
+    font:12px/150% Arial,Helvetica,sans-serif;
+}
+#tips h5 {
+    color:#FF5C69;
+    font-weight: normal;
+    padding: 5px 0;
+}
+#tips p {
+    line-height: 1.7em;
+}
+#main-content {
+    /*
+    margin-left: 160px;
+    margin-right: 210px;
+    */
+    width: 100%;
+    margin-left: 0;
+    border: 1px solid #eee;
+    min-height: 350px;
+    background: #fff url(/static/img/mash/bg-gray.gif) repeat-x;
+}
+.title-bar {
+    padding: 10px;
+    background-color:#f6f6f6;
+}
+
+#registration-form {
+    margin-top: 10px;
+    padding: 10px;
+    float: left;
+}
+#registration-form p input {
+    float: left;
+}
+#registration-form p {
+    padding: 5px;
+    float: left;
+    clear:both;
+}
+#registration-form p label {
+    width: 120px;
+    text-align: right;
+    margin-right: 10px;
+    display: block;
+    float: left;
+}
+#registration-form input.submit-button {
+    margin-left: 130px;
+}
+</style>
+{% endblock %}

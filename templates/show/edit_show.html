@@ -1,0 +1,97 @@
+{% extends "base/base.xhtml" %}
+{% block content %}
+<form id="addForm" method="post" enctype="multipart/form-data">
+    <h5>编辑分享</h5>
+    {% if photo.image %}
+    <img src="{{ photo.image.url }}" />
+    {% else %}
+    <img src="{{ photo.image_url }}" />
+    {% endif %}
+    {% csrf_token %}
+    <div class="formrow">
+        <label for="id_title" class="required">标题</label>{{ form.title.errors }}
+        <p><input type="text" class="longinput" id="id_title" name="title" value="{{ photo.title }}" /></p>
+    </div>
+    <div class="formrow">
+        <label for="id_image" class="required">上传照片(小于1M)</label>{{ form.image.errors }}
+        <p><input type="file" id="id_image" class="longinput" name="image" /></p>
+    </div>
+    <div class="formrow">
+        <label for="id_image_url" class="required">照片链接</label>{{ form.image_url.errors }}
+        <p><input type="text" id="id_image_url" class="longinput" name="image" value="{{ photo.image_url }}" /></p>
+    </div>
+    <div class="formrow">
+        <label for="id_description">简短描述(0 / 256个字)</label>{{ form.description.errors }}
+        <p><textarea id="id_description" class="longinput" name="description">{{ photo.description }}</textarea></p>
+    </div>
+    <div class="formrow">
+        <label for="id_tags">标签(多个标签间用<strong>英文逗号</strong>分开)</label>
+        <p><input type="text" id="id_tags" class="longinput" name="tags" value="{{ photo.tags_string }}" /></p>
+    </div>
+    <div class="formrow">
+        <label for="id_quote">引用</label>
+        <p><input type="text" id="id_quote" name="quote" class="longinput" value="{{ photo.quote }}" /></p>
+    </div>
+    <p>
+        <input type="submit" class="submit-button" value="更新，分享" />
+    </p>
+</form>
+<style type="text/css">
+#addForm {
+    padding: 10px;
+}
+#addForm p label {
+    color: #888;
+    display: block;
+    clear: both;
+}
+#addForm label.required {
+    color: #000;
+}
+.formrow {
+    padding: 5px 0;
+}
+#addForm h5 {
+    margin-bottom: 10px;
+}
+#id_description {
+    height: 70px;
+}
+#addForm p {
+    padding: 5px 0;
+}
+#addForm input, #addForm textarea {
+    width: 100%;
+    padding: 5px;
+    border: 2px solid #eee;
+}
+#addForm input.submit-button {
+    width: auto;
+    padding: 10px;
+}
+.longinput {
+    width: 100%;
+    padding: 5px;
+    border: 2px solid #eee;
+}
+.longinput:focus {
+    border-color: #FF5C69;
+    border-color: #888;
+}
+.submit-button {
+    padding: 10px 20px;
+}
+.submit-button:hover {
+    padding: 10px 20px;
+}
+ul.errorlist {
+    color: #cc0066;
+    padding: 10px;
+    display: inline;
+}
+ul li {
+    display: inline;
+}
+
+</style>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base/base.xhtml" %}
+{% block content %}
+<form id="addForm" method="post" enctype="multipart/form-data">
+    <h5>+ 淘宝画报导入分享</h5>
+    {% csrf_token %}
+    <div class="formrow">
+        <label for="id_quote">引用淘宝画报URL, 如http://huabao.taobao.com/fashion/d-256015.htm#poster-detail </label>
+        <p><input type="text" id="taobao_huabao_url" name="taobao_huabao_url" class="longinput" /></p>
+    </div>
+    <p>
+        <input type="submit" class="submit-button" value="提交，分享" />
+    </p>
+</form>
+<style type="text/css">
+#addForm {
+    padding: 10px;
+}
+#addForm label {
+    color: #888;
+}
+#addForm label.required {
+    color: #000;
+}
+.formrow {
+    padding: 5px 0;
+}
+#addForm h5 {
+    margin-bottom: 10px;
+}
+#addForm p {
+    padding: 5px 0;
+}
+.longinput {
+    width: 100%;
+    padding: 5px;
+    border: 2px solid #eee;
+}
+.longinput:focus {
+    border-color: #FF5C69;
+    border-color: #888;
+}
+.submit-button {
+    padding: 10px 20px;
+}
+.submit-button:hover {
+    padding: 10px 20px;
+}
+ul.errorlist {
+    color: #cc0066;
+    padding: 10px;
+    display: inline;
+}
+ul li {
+    display: inline;
+}
+
+</style>
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends "base/base.xhtml" %}
+{% block extra-head %}
+<style type="text/css">
+
+</style>
+{% endblock %}
+
+{% block banner %}
+<p>&nbsp;</p>
+{% endblock %}
+
+
+{% block content %}
+<div id="main-content" class="clearfix">
+    <h5 class="title-bar">注册</h5>
+
+    <div id="tips">
+        <h5>温馨小贴士</h5>
+        <p>我们绝不公开你的Email。</p>
+        <p>是否接受来自我们的邮件提醒完全由你自己决定。</p>
+        <p>建议填写常用的Email地址，这样你就不会错过精彩内容。</p>
+    </div>
+
+    <form method="post" action="" id="registration-form">
+        <p>
+            <label for="id_username">用户名:</label>
+            {{ form.username }}
+            {{ form.username.errors }}
+        </p>
+        <p>
+            <label for="id_email">Email 地址:</label>
+            {{ form.email }}
+            {{ form.email.errors }}
+        </p>
+        <p>
+            <label for="id_password1">密码:</label>
+            {{ form.password1 }}
+            {{ form.password1.errors }}
+        </p>
+        <p>
+            <label for="id_password2">密码(重复):</label>
+            {{ form.password2 }}
+            {{ form.password2.errors }}
+        </p>
+        {% csrf_token %}
+        <p><input type="submit" value="完成注册" class="submit-button" /></p>
+    </form>
+
+
+</div><!--/main-content-->
+
+<style type="text/css">
+/*---- errorlist ----*/
+ul.errorlist {
+    color: #cc0066;
+    padding: 10px 0;
+    float: left;
+}
+ul li {
+    float: left;
+}
+#tips {
+    font-size: 12px;
+    color: #333;
+    padding: 10px;
+    font:12px/150% Arial,Helvetica,sans-serif;
+}
+#tips h5 {
+    color:#66CC00;
+    color:#FF5C69;
+    font-weight: normal;
+    padding: 5px 0;
+}
+#tips p {
+    line-height: 1.7em;
+}
+#main-content {
+    /*
+    margin-left: 160px;
+    margin-right: 210px;
+    */
+    width: 100%;
+    margin-left: 0;
+    min-height: 450px;
+    background: #fff url(/static/img/mash/bg-gray.gif) repeat-x;
+}
+.title-bar {
+    padding: 10px;
+}
+
+#registration-form {
+    margin-top: 10px;
+    padding: 10px;
+    float: left;
+}
+#registration-form p input {
+    float: left;
+}
+#registration-form p {
+    padding: 5px;
+    float: left;
+    clear:both;
+}
+#registration-form p label {
+    width: 120px;
+    text-align: right;
+    margin-right: 10px;
+    display: block;
+    float: left;
+}
+#registration-form input.submit-button {
+    margin-left: 130px;
+}
+</style>
+{% endblock %}

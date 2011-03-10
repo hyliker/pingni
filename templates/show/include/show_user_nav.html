@@ -1,0 +1,33 @@
+{% load navactive_tag %}
+{% with show_user.get_profile as profile %}
+<div id="show-user-profile" class="clearfix">
+    <div id="avatar-wrapper">
+        {% if profile.avatar %}
+        <a href="{% url show_user show_user.pk %}"><img src="{{ profile.avatar.url }}" /></a>
+        {% else %}
+        <a href="{% url show_user show_user.pk %}"><img src="/static/img/anonymous_100x100.png" /></a>
+        {% endif %}
+    </div>
+    <div id="user-info-wrapper">
+        <p id="user-nickname">{{ profile.nickname|default:show_user.username }}</p>
+        <p id="user-sign">{{ profile.sign }}</p>
+        <p id="user-location">{{ profile.location }}</p>
+        <p id="user-website"><a href="{{ profile.website }}" target="_blank">我的网站 &raquo;</a></p>
+    </div>
+</div>
+
+<ul id="user-nav" class="clearfix">
+    <li><a href="{% url show_user show_user.pk %}" class="{% navactive request "/show/user/\d+/$" "active" %}">分享({{ profile.show_count }})</a></li>
+    <li><a href="{% url show_user_likes show_user.pk %}" class="{% navactive request "/show/user/\d+/likes/$" "active" %}">喜欢({{ profile.like_count }})</a></li>
+    <li><a href="{% url follower show_user.pk %}" class="{% navactive request "/person/follower/\d+/$" "active" %}">关注({{ profile.follower_count }})</a></li>
+    <li><a href="{% url followee show_user.pk %}" class="{% navactive request "/person/followee/\d+/$" "active" %}">粉丝({{ profile.followee_count }})</a></li>
+    {% if user != show_user %}
+        {% if is_following %}
+    <li><a href="{% url undo_following show_user.pk %}" id="admire"> - 取消关注</a></li>
+        {% else %}
+    <li><a href="{% url following show_user.pk %}" id="admire"> + 我要关注</a></li>
+        {% endif %}
+    {% endif %}
+</ul>
+
+{% endwith %}

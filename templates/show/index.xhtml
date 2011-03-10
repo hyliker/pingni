@@ -1,0 +1,63 @@
+{% extends "base/base.xhtml" %}
+{% block content %}
+{% for s in pages.cur_page.object_list %}
+<div class="show">
+    <div class="show-header">
+        {% if user in s.likes.all %}
+        <a href="{% url show_like s.pk %}?undo=1" class="likit I_likit">我喜欢({{ s.likes.count }})</a>
+        {% else %}
+        <a href="{% url show_like s.pk %}" class="likit">我喜欢({{ s.likes.count }})</a>
+        {% endif %}
+        <a href="{% url show s.pk %}" class="show-title">{{ s.title }}</a>
+        <p class="show-meta"><a href="{% url show_user s.user.pk %}">{{ s.user }}</a> 
+        分享于 {{ s.dtcreated }} <span class="read_count">浏览({{ s.read_count }})</span> <a href="{% url show s.pk %}#commentsWrapper">评论({{ s.comment_count }})</a> <a href="{% url show s.pk %}#likes">喜欢({{ s.like_count }})</a>
+        </p>
+    </div>
+    <div class="show-body">
+        {% if s.image %}
+        <a href="{% url show s.pk %}"><img src="{{ s.image.url }}" /></a>
+        {% else %}
+        <a href="{% url show s.pk %}"><img src="{{ s.image_url }}" /></a>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+
+<div id="paginator" class="clearfix">
+    {% with pages.cur_page as page %}
+    {% if page.has_previous %}
+    <a href="?page={{ page.previous_page_number }}" class="previous">&laquo; 上一页</a>
+    {% else %}
+    <a class="disable">&laquo; 上一页</a>
+    {% endif %}
+    {% if page.has_next %}
+    <a href="?page={{ page.next_page_number }}" class="next">下一页 &raquo;</a>
+    {% else %}
+    <a class="disable">下一页 &raquo; </a>
+    {% endif %}
+    {% endwith %}
+</div><!--/paginator-->
+<script type="text/javascript">
+$(function () {
+    $("a.likit").click(function (event) {
+        event.preventDefault();
+        var url = $(this).attr("href");
+        var $obj = $(this);
+        $.getJSON(url, function (res) {
+            if(res.success) {
+                if (res.undo) {
+                    $obj.removeClass("I_likit");
+                    $obj.attr("href", url.replace("?undo=1", ""));
+                } else {
+                    $obj.addClass("I_likit");
+                    $obj.attr("href", url + "?undo=1");
+                }
+                $obj.html("我喜欢(" + res.data.likit_count + ")");
+            } else {
+                alert("你还没有注册或者登陆，无法收藏");
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

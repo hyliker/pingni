@@ -1,0 +1,97 @@
+{% extends "base/base.xhtml" %}
+{% block content %}
+<div id="main-content" class="clearfix">
+    <h5 class="title-bar">登录</h5>
+
+    <div id="tips">
+        <h5>Pingni 是一个让你发现美、分享美的社交网。</h5>
+    </div>
+
+    <form method="post" action="" id="registration-form">
+        <p>
+            <label for="id_username">用户名:</label>
+            {{ form.username }}
+            {{ form.username.errors }}
+        </p>
+        <p>
+            <label for="id_password1">密码:</label>
+            {{ form.password }}
+            <!--<a href="#" id="forget_password">忘记密码</a>-->
+        </p>
+            {{ form.password.errors }}
+        <input type="hidden" name="next" value="/show/user/" />
+        {% csrf_token %}
+        <p><input type="submit" value="登录" class="submit-button" />
+        </p>
+    </form>
+
+
+</div><!--/main-content-->
+
+<style type="text/css">
+/*---- errorlist ----*/
+ul.errorlist {
+    color: #cc0066;
+    padding: 5px;
+    float: left;
+}
+ul li {
+    float: left;
+    line-height: 2em;
+}
+#forget_password {
+    line-height: 2em;
+    margin-left: 10px;
+}
+#tips {
+    font-size: 12px;
+    color: #333;
+    padding: 10px;
+}
+#tips h5 {
+    color:#FF5C69;
+    font-weight: normal;
+    padding: 5px 0;
+}
+#tips p {
+    line-height: 1.7em;
+}
+#main-content {
+    /*
+    margin-left: 160px;
+    margin-right: 210px;
+    */
+    width: 100%;
+    margin-left: 0;
+    min-height: 450px;
+    background: #fff url(/static/img/mash/bg-gray.gif) repeat-x;
+}
+.title-bar {
+    padding: 10px;
+}
+
+#registration-form {
+    margin-top: 10px;
+    padding: 10px;
+    float: left;
+}
+#registration-form p input {
+    float: left;
+}
+#registration-form p {
+    padding: 5px;
+    float: left;
+    clear:both;
+}
+#registration-form p label {
+    width: 120px;
+    text-align: right;
+    margin-right: 10px;
+    display: block;
+    float: left;
+}
+#registration-form input.submit-button {
+    margin-left: 130px;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base/base.xhtml" %}
+{% block extra-head %}
+<style type="text/css">
+#tags {
+    margin-bottom: 10px;
+}
+#tags li {
+    padding: 5px;
+    margin-bottom: 5px;
+    float: left;
+}
+a.tag {
+    background-color: #eee;
+    padding: 5px 0 5px 5px;
+}
+.tag_count {
+    background-color: #FF5C69;
+    color: #fff;
+    padding: 5px;
+}
+.tag_name {
+    padding: 5px;
+}
+a.tag:hover {
+    background-color: #FF5C69;
+    color: #fff;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="tags" class="clearfix">
+    <ul>
+        {% for t in pages.cur_page.object_list %}
+        <li><a href="{% url show_tag t.name %}" class="tag"><span class="tag_name">{{ t.name }}</span><span class="tag_count">{{ t.count }}</span></a></li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div id="paginator" class="clearfix">
+    {% with pages.cur_page as page %}
+    {% if page.has_previous %}
+    <a href="?page={{ page.previous_page_number }}" class="previous">&laquo; 上一页</a>
+    {% else %}
+    <a class="disable">&laquo; 上一页</a>
+    {% endif %}
+    {% if page.has_next %}
+    <a href="?page={{ page.next_page_number }}" class="next">下一页 &raquo;</a>
+    {% else %}
+    <a class="disable">下一页 &raquo; </a>
+    {% endif %}
+    {% endwith %}
+</div><!--/paginator-->
+{% endblock %}

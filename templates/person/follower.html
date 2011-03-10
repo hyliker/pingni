@@ -1,0 +1,136 @@
+{% extends "base/base.xhtml" %}
+
+{% block banner %}
+{% endblock %}
+
+
+{% block extra-head %}
+<style type="text/css">
+#show-user-profile {
+    background-color: #f8f8f8;
+    padding: 10px;
+}
+#avatar-wrapper {
+    float: left;
+    margin-right: 10px;
+}
+#avatar-wrapper img {
+    width: 100px;
+    height: 100px;
+}
+#user-info-wrapper p {
+    padding-bottom: 5px;
+}
+#user-nickname {
+    font-size: 2em;
+    font-weight: bold;
+}
+#user-nav li {
+    float: left;
+    padding: 10px;
+}
+#user-nav {
+    background: transparent url(/static/img/bg_gradient_grey.png) repeat-x center center;
+    _background-image: none;
+    _background-color: #eee;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
+}
+#user-nav li a.active {
+    background-color: #fff;
+    padding: 5px 10px 11px 10px;
+    border: 1px solid #ddd;
+    border-bottom: 0px;
+    color: #FF5C69;
+}
+#admire {
+    display: block;
+    float: right;
+    margin-left: 400px;
+    margin-bottom: -10px;
+}
+ul.followee_list {
+    text-align: center;
+    margin: 0 auto;
+    background-color: #000;
+}
+ul.followee_list li {
+    float: left;
+    text-align: center;
+    margin: 15px;
+    width: 100px;
+    height: 100px;
+}
+.followee_list li img {
+    height: 100px;
+    width: 100px;
+}
+
+#paginator {
+    margin-top: 20px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+{% include "show/include/show_user_nav.html" %}
+
+<div id="followee_list_wrapper" class="clearfix">
+    <ul class="followee_list" class="clearfix">
+{% for s in pages.cur_page.object_list %}
+        <li>
+            <a href="{% url show_user s.followee.pk %}">
+                {% if s.followee.get_profile.avatar %}
+                <img src="{{ s.followee.get_profile.avatar.url }}" />
+                {% else %}
+                <img src="/static/img/anonymous.jpg" />
+                {% endif %}
+            <br />
+            <span>{{ s.followee.username }}</span>
+            </a> 
+        </li>
+{% endfor %}
+    </ul>
+</div>
+
+<div class="clearfix"></div>
+
+<div id="paginator" class="clearfix">
+    {% with pages.cur_page as page %}
+    {% if page.has_previous %}
+    <a href="?page={{ page.previous_page_number }}" class="previous">&laquo; 上一页</a>
+    {% else %}
+    <a class="disable">&laquo; 上一页</a>
+    {% endif %}
+    {% if page.has_next %}
+    <a href="?page={{ page.next_page_number }}" class="next">下一页 &raquo;</a>
+    {% else %}
+    <a class="disable">&raquo; 下一页</a>
+    {% endif %}
+    {% endwith %}
+</div><!--/paginator-->
+<script type="text/javascript">
+$(function () {
+    $("a.likit").click(function (event) {
+        event.preventDefault();
+        var url = $(this).attr("href");
+        var $obj = $(this);
+        $.getJSON(url, function (res) {
+            if(res.success) {
+                if (res.undo) {
+                    $obj.removeClass("I_likit");
+                    $obj.attr("href", url.replace("undo=1", ""));
+                } else {
+                    $obj.addClass("I_likit");
+                    $obj.attr("href", url + "undo=1");
+                }
+                $obj.html("我喜欢(" + res.data.likit_count + ")");
+            } else {
+                alert("你还没有注册或者登陆，无法收藏");
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
